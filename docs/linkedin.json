@@ -1,0 +1,32 @@
+{
+  "claim": "Open engine that shares building solar between neighbours and bills each member every month.",
+  "data_label": "simulated loads | open data: PVGIS (EU JRC) PV 2023, ElCom tariffs 2026",
+  "stats": [
+    [
+      "54 %",
+      "of PV used inside the community",
+      "green"
+    ],
+    [
+      "CHF 51",
+      "median household saving per year",
+      "accent"
+    ],
+    [
+      "+9 pts",
+      "self-consumption vs static shares",
+      "amber"
+    ]
+  ],
+  "limit": "Loads are simulated and the legal grid-fee reduction is a parameter from secondary sources, not verified.",
+  "alt": "Dark chart with a summer week of building solar production against community consumption, and bars of the yearly saving for 26 households, all positive, median CHF 51.",
+  "hashtags": [
+    "#LEG",
+    "#Energiegemeinschaft",
+    "#Solarstrom",
+    "#Eigenverbrauch",
+    "#Energiewende",
+    "#OpenSource"
+  ],
+  "post": "Sharing rooftop solar between neighbours sounds simple until you have to decide who gets which kilowatt-hour, every 15 minutes, and then bill 34 members fairly.\n\nSwiss local electricity communities (LEG) have been legal since 1 January 2026, so I built an open-source engine for the allocation and billing step. It takes 15-minute meter profiles for consumers and PV plants, allocates the solar energy with three methods (static shares, dynamic by consumption, and a weighted max-min fair one), prices it with 2026 ElCom tariffs, and writes monthly bills, invoices and a metered-data export.\n\nMeasured on a simulated community of 34 consumers and 110 kWp of PV for one year:\n- Static shares used 44.8% of the PV locally, dynamic and fair allocation 53.8%.\n- The energy balance closed with 0 Wh error in all 35,040 intervals.\n- With a 40% grid-fee reduction, the median household saves CHF 51 per year, about 6% of its bill.\n\nNot verified: the loads are simulated, not real meter data. The grid-fee reduction comes from secondary sources, so it is a parameter, and the exported message follows the SDAT-CH structure but is not validated against the official schema.\n\nIf you run or plan a LEG, which would you want first: simple fixed shares, or the allocation that wastes the least solar?\n\nCode: https://github.com/Usernamepersonperson/leg-allocation-sim"
+}
