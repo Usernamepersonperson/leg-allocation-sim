@@ -80,20 +80,26 @@ flowchart LR
 
 ## Legal basis
 
-The LEG exists since 2026-01-01 (Federal Act on a Secure Electricity Supply with Renewable Energies, the "Mantelerlass"). The relevant texts are the Stromversorgungsgesetz (StromVG, SR 734.7) Art. 17d and 17e and the Stromversorgungsverordnung (StromVV, SR 734.71) Art. 19e to 19h. As described by secondary sources (installer and utility guides, read 2026-11-08): the reduction of the grid-usage fee on locally exchanged energy is 40 % if the energy does not use a higher grid level, 20 % if it does; participants must be in the same municipality, grid area and grid level; levies, grid surcharge and metering are not reduced (StromVV Art. 19h).
+The LEG exists since 2026-01-01 (Federal Act on a Secure Electricity Supply with Renewable Energies, the "Mantelerlass"). The relevant texts are the Stromversorgungsgesetz (StromVG, SR 734.7) Art. 17d and 17e and the Stromversorgungsverordnung (StromVV, SR 734.71) Art. 19e to 19h.
 
-**I did not read the primary Fedlex text.** Therefore every legal number is a parameter in `LegParams` (`discount_single_ts` 0.40, `discount_multi_ts` 0.20, `discountable_share` 0.9, `levies_on_internal`), and the engine does not check participation eligibility. Check the current ordinance before relying on a result. The ZEV scheme is a simplification (internal energy pays no grid fee and no levies).
+Checked in the consolidated StromVV text of 1 July 2026 on fedlex (2026-11-09):
+- Art. 19h para. 1: the reduction on the grid-usage tariff for community-produced energy is 40 % of the participant's grid-usage tariff.
+- Art. 19h para. 3: it falls to 20 % for all members if the energy cannot reach every member without a voltage transformation.
+- Art. 19h para. 5: system services, the electricity reserve, the grid surcharge (Art. 35 EnG) and levies to public authorities are billed without reduction.
+- Art. 19e: generation capacity of at least 5 % of the members' connection capacity, everyone in the same grid area, nothing connected above 36 kV.
+
+The municipality condition and other StromVG details come from secondary sources (installer and utility guides, read 2026-11-08); I did not read StromVG Art. 17d/17e. Every legal number stays a parameter in `LegParams` (`discount_single_ts` 0.40, `discount_multi_ts` 0.20, `discountable_share` 0.9, `levies_on_internal`), and the engine does not check participation eligibility. The ZEV scheme is a simplification (internal energy pays no grid fee and no levies).
 
 ## Data sources
 
-- PV yield: PVGIS v5.3, PVGIS-SARAH3 radiation database, European Commission Joint Research Centre. Hourly yield per kWp for 2023 at Zurich (47.37 N, 8.54 E), 14 % losses; south 30 degrees, east 15 degrees, west 15 degrees. Extract: `leg_sim/data/pvgis_zurich_2023.csv`. Hourly data is split into 15-minute values by energy-preserving interpolation, so sub-hourly cloud variability is not represented.
-- Tariffs: ElCom electricity tariffs 2026 via LINDAS (`https://ld.admin.ch/query`, dataset "Strompreis per Stromnetzbetreiber" on opendata.swiss), standard product, categories H4 (household, 4,500 kWh/yr) and C2 (small business, 30,000 kWh/yr), seven operators identified by ElCom operator id, median-priced municipality of the household category. Extract: `leg_sim/data/elcom_tariffs_2026.csv` (Rp/kWh). Source: ElCom.
+- PV yield: PVGIS v5.3, PVGIS-SARAH3 radiation database, European Commission Joint Research Centre. Hourly yield per kWp for 2023 at Zurich (47.37 N, 8.54 E), 14 % losses; south 30 degrees, east 15 degrees, west 15 degrees. Extract: `leg_sim/data/pvgis_zurich_2023.csv`. Hourly data is split into 15-minute values by energy-preserving interpolation, so sub-hourly cloud variability is not represented. Terms: free reuse with acknowledgement, "PVGIS © European Communities, 2001-2026" (JRC PVGIS data pages, Commission reuse decision 2011/833/EU).
+- Tariffs: ElCom electricity tariffs 2026 via LINDAS (`https://ld.admin.ch/query`, dataset "Strompreis per Stromnetzbetreiber" on opendata.swiss), standard product, categories H4 (household, 4,500 kWh/yr) and C2 (small business, 30,000 kWh/yr), seven operators identified by ElCom operator id, median-priced municipality of the household category. Extract: `leg_sim/data/elcom_tariffs_2026.csv` (Rp/kWh). Terms: opendata.swiss "Open use" (commercial use and redistribution allowed; checked 2026-11-09). Source: ElCom.
 - Loads: simulated (daily rhythm, season, temperature-driven heat pump, appliance events, EV charging, business opening hours). They are not measurements.
 
 ## What is not verified yet
 
 - No real smart-meter data was used; the savings depend on the simulated profiles and on the PV size relative to the load.
-- The legal grid-fee rules come from secondary sources; the 0.9 "discountable share", the 8 Rp/kWh feed-in price, the price split and the fixed-charge derivation are assumptions.
+- The 40 % / 20 % reduction is checked against StromVV Art. 19h; the StromVG articles were not read. The 0.9 "discountable share", the 8 Rp/kWh feed-in price, the price split and the fixed-charge derivation are assumptions.
 - ElCom tariffs are all-in averages per reference category; power-based (kW) grid fees and time-of-use tariffs are not modelled.
 - The XML message follows the SDAT-CH / ebIX structure in spirit but is not validated against the official schema and must not be sent into a market process as is.
 - PV is hourly data interpolated to 15 minutes; DST is ignored (fixed UTC+1); no battery, no EV smart charging, no eligibility checks, no reconciliation with a grid operator's own allocation.
