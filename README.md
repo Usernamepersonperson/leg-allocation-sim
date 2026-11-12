@@ -106,4 +106,4 @@ The municipality condition and other StromVG details come from secondary sources
 
 ## Licence
 
-MIT, Copyright (c) 2026 Victor Bonilla. See `LICENSE`.
+MIT, Copyright (c) 2026 VB-Builds. See `LICENSE`.
